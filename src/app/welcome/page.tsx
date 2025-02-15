@@ -1,9 +1,10 @@
+import { NO_INDEX_PAGE } from '@/cfg/seo.cfg'
 import type { Metadata } from 'next'
 import Welcome from './welcome'
 
 export const metadata: Metadata = {
-	title: 'Welcome',
-	description: '',
+	title: `Добро пожаловать`,
+	...NO_INDEX_PAGE,
 }
 
 export default function WelcomePage() {

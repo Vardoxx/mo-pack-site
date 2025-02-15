@@ -1,7 +1,22 @@
-import type { NextConfig } from "next";
+import { URL } from '@/cfg/pages-url.cfg'
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+	trailingSlash: false,
+	async redirects() {
+		return [
+			{
+				source: URL.root,
+				destination: URL.WELCOME,
+				permanent: true,
+			},
+			{
+				source: URL.MAIN,
+				destination: URL.COMPOSITION,
+				permanent: true,
+			},
+		]
+	},
+}
 
-export default nextConfig;
+export default nextConfig

@@ -1,5 +1,6 @@
 'use client'
 
+import { URL } from '@/cfg/pages-url.cfg'
 import Block from '@/components/welcome/block'
 import Header from '@/components/welcome/header'
 import { application, requirements, what } from '@/constants/welcome.constants'
@@ -30,12 +31,12 @@ const Welcome = () => {
 					{application}
 					<div className='flex w-full justify-around mt-5'>
 						<Button
-							onClick={() => router.push('/auth/sign-in')}
+							onClick={() => router.push(URL.SIGN_IN)}
 							variant='contained'
 							size='large'
 							color='warning'
 						>
-							Войти/Зарегистрироваться
+							Войти | Зарегистрироваться
 						</Button>
 						<Button
 							href='https://discord.com/invite/rsgs'
