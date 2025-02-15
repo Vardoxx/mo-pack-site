@@ -4,6 +4,11 @@ import Email from 'next-auth/providers/email'
 import prisma from '../../prisma/prisma-client'
 
 export const nextAuthCfg: AuthOptions = {
+	pages: {
+		signIn: '/auth/sign-in',
+		verifyRequest: '/auth/verify',
+		newUser: process.env.NEXTAUTH_URL,
+	},
 	secret: process.env.NEXTAUTH_SECRET,
 	adapter: PrismaAdapter(prisma),
 	session: {
@@ -30,6 +35,9 @@ export const nextAuthCfg: AuthOptions = {
 				token.email = user.email
 			}
 			return token
+		},
+		async redirect({ baseUrl }) {
+			return baseUrl
 		},
 	},
 }

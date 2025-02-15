@@ -77,6 +77,14 @@ model Application {
   hours   Int
 
   reason String
+
+  status ApplicationStatus @default(pending)
+}
+
+enum ApplicationStatus {
+  pending
+  denied
+  approved
 }
 
 enum UserEnum {
