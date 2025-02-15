@@ -1,5 +1,11 @@
-import TestPage from './test'
+import type { Metadata } from 'next'
+import Welcome from './welcome'
 
-export default function Home() {
-	return <TestPage />
+export const metadata: Metadata = {
+	title: 'Welcome',
+	description: '',
+}
+
+export default function WelcomePage() {
+	return <Welcome />
 }
