@@ -1,7 +1,7 @@
 'use client'
 
 import { URL } from '@/cfg/pages-url.cfg'
-import Block from '@/components/welcome/block'
+import Block from '@/components/block'
 import Header from '@/components/welcome/header'
 import { application, requirements, what } from '@/constants/welcome.constants'
 import idGenerator from '@/utils/id-generator.utils'

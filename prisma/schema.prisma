@@ -47,7 +47,7 @@ model User {
 
   applications Application[]
 
-  type UserEnum @default(guest)
+  role UserEnum @default(guest)
 
   kit KitEnum?
 
@@ -73,12 +73,13 @@ model Application {
 
   name    String
   kit     KitEnum
-  steamId Int
-  hours   Int
-
-  reason String
+  steamId String
+  hours   String
+  reason  String
 
   status ApplicationStatus @default(pending)
+
+  @@map("application")
 }
 
 enum ApplicationStatus {
@@ -90,6 +91,7 @@ enum ApplicationStatus {
 enum UserEnum {
   guest
   member
+  admin
   owner
 }
 

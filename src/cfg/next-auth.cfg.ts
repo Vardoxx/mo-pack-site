@@ -1,4 +1,5 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
+import { UserEnum } from '@prisma/client'
 import { AuthOptions } from 'next-auth'
 import Email from 'next-auth/providers/email'
 import prisma from '../../prisma/prisma-client'
@@ -30,14 +31,25 @@ export const nextAuthCfg: AuthOptions = {
 		}),
 	],
 	callbacks: {
-		async jwt({ token, user }) {
+		async jwt({ token, user, account }) {
 			if (user) {
 				token.email = user.email
+				token.role = user.role
+				token.kit = user.kit
+				token.steamId = user.steamId
 			}
 			return token
 		},
-		async redirect({ baseUrl }) {
-			return baseUrl
+
+		async session({ session, token }) {
+			session.user = {
+				...session.user,
+				role: token.role as UserEnum,
+				kit: token.kit,
+				steamId: token.steamId as number,
+			}
+
+			return session
 		},
 	},
 }

@@ -1,4 +1,5 @@
 import { SITE_NAME } from '@/cfg/seo.cfg'
+import MainLayout from '@/components/main-layout'
 
 import type { Metadata } from 'next'
 
@@ -14,5 +15,5 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode
 }>) {
-	return <div>{children}</div>
+	return <MainLayout>{children}</MainLayout>
 }

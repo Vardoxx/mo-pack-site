@@ -3,11 +3,11 @@ import { KitEnum } from '@prisma/client'
 export interface ApplicationRequest {
 	name: string
 
-	hours: number
+	hours: string
 
-	steamId: number
+	steamId: string
 
-	kit: KitEnum
+	kit: KitEnum | string
 
 	reason: string
 }
