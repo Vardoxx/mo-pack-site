@@ -1,5 +1,5 @@
 import { SITE_NAME } from '@/cfg/seo.cfg'
-import MainLayout from '@/components/main-layout'
+import MainLayout from '@/components/layout/main-layout'
 
 import type { Metadata } from 'next'
 

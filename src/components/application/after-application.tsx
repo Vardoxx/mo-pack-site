@@ -1,5 +1,5 @@
 import { FaRegClock } from 'react-icons/fa'
-import Block from '../block'
+import Block from '../ui/block'
 
 const AfterApplication = () => {
 	return (

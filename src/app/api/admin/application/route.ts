@@ -1,5 +1,5 @@
-import { adminGuard } from '@/app/api/guard/admin.guard'
 import { nextAuthCfg } from '@/cfg/next-auth.cfg'
+import { adminGuard } from '@/server-utils/guards/admin.guard'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import prisma from '../../../../../prisma/prisma-client'

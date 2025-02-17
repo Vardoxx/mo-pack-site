@@ -1,9 +1,9 @@
 'use client'
 
-import Block from '@/components/block'
+import Block from '@/components/ui/block'
 import { kit } from '@/constants/application.constants'
 import { requireMessage } from '@/constants/other.constants'
-import { applicationService } from '@/service/application.service'
+import { applicationService } from '@/services/application.service'
 import { ApplicationRequest } from '@/types/application-api.types'
 import { Button, MenuItem, TextField } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'

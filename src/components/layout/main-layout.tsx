@@ -3,9 +3,9 @@
 import { useGetApplicationStatus } from '@/hooks/use-get-application-status'
 import { useGetUserRole } from '@/hooks/use-get-user-role'
 import { PropsWithChildren } from 'react'
-import AfterApplication from './ui/after-application'
-import Application from './ui/application'
-import Download from './ui/download'
+import AfterApplication from '../application/after-application'
+import Application from '../application/application'
+import Download from '../ui/download'
 
 const MainLayout = ({ children }: PropsWithChildren) => {
 	const { role, isUserLoading } = useGetUserRole()

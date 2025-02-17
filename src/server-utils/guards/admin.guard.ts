@@ -2,7 +2,7 @@
 import { nextAuthCfg } from '@/cfg/next-auth.cfg'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
-import prisma from '../../prisma/prisma-client'
+import prisma from '../../../prisma/prisma-client'
 
 export async function adminGuard() {
 	const session = await getServerSession(nextAuthCfg)
