@@ -51,7 +51,7 @@ model User {
 
   kit KitEnum?
 
-  steamID Int?
+  steamId String?
 
   @@map("users")
 }

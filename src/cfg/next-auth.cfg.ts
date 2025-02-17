@@ -31,7 +31,7 @@ export const nextAuthCfg: AuthOptions = {
 		}),
 	],
 	callbacks: {
-		async jwt({ token, user, account }) {
+		async jwt({ token, user }) {
 			if (user) {
 				token.email = user.email
 				token.role = user.role

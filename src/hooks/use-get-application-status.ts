@@ -1,29 +1,26 @@
 import { axiosClassic } from '@/api/interceptors'
 import { ApplicationStatus } from '@prisma/client'
-import { useSession } from 'next-auth/react'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
-export function useGetApplicationStatus(): ApplicationStatus | null {
-	const { data: session } = useSession()
-	const [status, setStatus] = useState<ApplicationStatus | null>(null)
+export function useGetApplicationStatus(enabled?: boolean) {
+	const { data, isLoading } = useQuery({
+		queryKey: ['getApplicationStatus'],
+		queryFn: async () =>
+			await axiosClassic.get<{ status: ApplicationStatus }>(
+				'/application/get-status'
+			),
+		refetchInterval: 60000,
+		enabled,
+	})
+
+	const [status, setStatus] = useState<ApplicationStatus>('pending')
 
 	useEffect(() => {
-		const fetchApplicationStatus = async () => {
-			if (session?.user?.email) {
-				try {
-					const response = await axiosClassic.get(
-						`/application/get-status/${session.user.email}`
-					)
-					setStatus(response.data.status || null)
-				} catch (error) {
-					console.error('Error fetching application status:', error)
-					setStatus(null)
-				}
-			}
+		if (data?.data.status) {
+			setStatus(data.data.status)
 		}
+	}, [data])
 
-		fetchApplicationStatus()
-	}, [session?.user?.email])
-
-	return status
+	return { status, isStatusLoading: isLoading }
 }

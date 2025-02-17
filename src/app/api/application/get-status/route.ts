@@ -1,17 +1,16 @@
 'use server'
 
+import { nextAuthCfg } from '@/cfg/next-auth.cfg'
+import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
-import prisma from '../../../../../../prisma/prisma-client'
+import prisma from '../../../../../prisma/prisma-client'
 
-export async function GET(
-	req: Request,
-	{ params }: { params: { email: string } }
-) {
-	const { email } = await params
+export async function GET() {
+	const session = await getServerSession(nextAuthCfg)
 
 	const existUser = await prisma.user.findUnique({
 		where: {
-			email,
+			email: session?.user.email!,
 		},
 	})
 
