@@ -8,5 +8,9 @@ export const metadata: Metadata = {
 }
 
 export default function WelcomePage() {
-	return <Welcome />
+	return (
+		<div className='wrapper'>
+			<Welcome />
+		</div>
+	)
 }

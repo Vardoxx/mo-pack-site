@@ -7,5 +7,9 @@ export const metadata: Metadata = {
 }
 
 export default function SigninPage() {
-	return <Signin />
+	return (
+		<div className='wrapper'>
+			<Signin />
+		</div>
+	)
 }

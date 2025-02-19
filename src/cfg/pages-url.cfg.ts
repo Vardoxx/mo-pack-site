@@ -6,8 +6,9 @@ class PAGES_URL {
 
 	SIGN_IN = `${this.AUTH}/sign-in`
 
-	PROFILE = `${this.MAIN}/profile`
 	COMPOSITION = `${this.MAIN}/composition`
+	TEST = `${this.MAIN}/test`
+	PROFILE = `${this.MAIN}/profile`
 }
 
 export const URL = new PAGES_URL()

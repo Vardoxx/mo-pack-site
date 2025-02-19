@@ -20,7 +20,7 @@ const Signin = () => {
 		<div className='w-full h-screen flex items-center justify-center'>
 			<form
 				onSubmit={handleSubmit(data => signIn('email', data))}
-				className='flex flex-col justify-between w-1/3 min-w-80 h-max bg-slate-800 rounded-2xl p-4 pt-1.5 gap-3 border-2 border-orange-500'
+				className='flex flex-col justify-between max-w-xl min-w-80 h-max bg-slate-800 rounded-2xl p-4 pt-1.5 gap-3 border-2 border-orange-500'
 			>
 				<div className='flex justify-end'>
 					<CgClose

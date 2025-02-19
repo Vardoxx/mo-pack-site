@@ -48,7 +48,7 @@ const AfterApplication = () => {
 				<Block title='Заявка отправлена' fontSize='text-4xl'>
 					<div className='flex flex-col items-center gap-4'>
 						<FaRegClock className='text-7xl' />
-						<p>Ответ поступит вам на почту в скором времени</p>
+						<p>Когда заявка будет обработана это окно изменится</p>
 						<Button
 							loading={isStatusLoading}
 							variant='contained'

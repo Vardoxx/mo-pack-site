@@ -13,7 +13,7 @@ const Welcome = () => {
 
 	return (
 		<div className='w-full h-full flex items-center justify-center my-3'>
-			<div className='w-3/4 flex flex-col justify-center gap-14 items-center'>
+			<div className='w-full flex flex-col justify-center gap-14 items-center'>
 				<Header />
 
 				<Block title='Что это?'>{what}</Block>
