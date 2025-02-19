@@ -13,7 +13,7 @@ const Toaster = () => {
 			toastOptions={{
 				style: toasterStyle,
 			}}
-			duration={1000000}
+			duration={3000}
 			position='bottom-right'
 			theme='dark'
 		/>

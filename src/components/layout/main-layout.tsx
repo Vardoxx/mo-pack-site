@@ -8,17 +8,18 @@ import Application from '../application/application'
 import Download from '../ui/download'
 
 const MainLayout = ({ children }: PropsWithChildren) => {
-	const { role, isUserLoading } = useGetUserRole()
+	const { role, isUserPending } = useGetUserRole()
+
 	const { status, isStatusLoading } = useGetApplicationStatus(
-		role !== 'guest' ? false : true
+		role !== 'guest' || !role ? false : true
 	)
 
-	if (isUserLoading || isStatusLoading) return <Download />
+	if (isUserPending || isStatusLoading) return <Download />
 
 	if (role === 'member' || role === 'admin' || role === 'owner') {
 		return <div>{children}</div>
 	} else {
-		if (status === null) return <Application />
+		if (status === 'none') return <Application />
 		if (status === 'pending') return <AfterApplication />
 	}
 }

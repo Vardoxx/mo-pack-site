@@ -30,9 +30,11 @@ export async function GET() {
 		},
 	})
 
-	if (!status) {
-		return NextResponse.json({ status: null })
+	if (!status && existUser.role === 'member') {
+		return NextResponse.json({ status: 'approved' })
 	}
+
+	if (!status) return NextResponse.json({ status: 'none' })
 
 	return NextResponse.json({ status: status.status })
 }

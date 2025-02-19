@@ -3,6 +3,7 @@
 import Block from '@/components/ui/block'
 import { kit } from '@/constants/application.constants'
 import { requireMessage } from '@/constants/other.constants'
+import { useGetApplicationStatus } from '@/hooks/use-get-application-status'
 import { applicationService } from '@/services/application.service'
 import { ApplicationRequest } from '@/types/application-api.types'
 import { Button, MenuItem, TextField } from '@mui/material'
@@ -28,9 +29,14 @@ const Application = () => {
 		mutate(data)
 	}
 
-	const { mutate } = useMutation({
+	const { refetchApplicationStatus } = useGetApplicationStatus()
+
+	const { mutate, isPending } = useMutation({
 		mutationKey: ['application'],
 		mutationFn: (data: ApplicationRequest) => applicationService.create(data),
+		onSuccess() {
+			refetchApplicationStatus()
+		},
 	})
 
 	return (
@@ -232,7 +238,12 @@ const Application = () => {
 								)}
 							/>
 						</div>
-						<Button type='submit' variant='contained' color='warning'>
+						<Button
+							loading={isPending}
+							type='submit'
+							variant='contained'
+							color='warning'
+						>
 							Отправить
 						</Button>
 					</form>

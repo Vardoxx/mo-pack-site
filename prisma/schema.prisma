@@ -83,6 +83,7 @@ model Application {
 }
 
 enum ApplicationStatus {
+  none
   pending
   denied
   approved

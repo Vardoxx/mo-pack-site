@@ -5,7 +5,7 @@ export async function PUT(
 	request: Request,
 	{ params }: { params: { userId: string } }
 ) {
-	const { userId } = params
+	const { userId } = await params
 
 	const application = await prisma.application.findFirst({
 		where: {
@@ -38,6 +38,12 @@ export async function PUT(
 
 	if (!updatedUser)
 		return NextResponse.json('Пользователь не найден', { status: 400 })
+
+	await prisma.application.delete({
+		where: {
+			id: application.id,
+		},
+	})
 
 	return NextResponse.json('Заявка одобрена', { status: 200 })
 }
