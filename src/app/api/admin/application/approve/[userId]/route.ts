@@ -33,6 +33,9 @@ export async function PUT(
 			role: {
 				set: 'member',
 			},
+			competitive: {
+				set: 'RESERVE',
+			},
 		},
 	})
 

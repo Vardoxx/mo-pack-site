@@ -9,14 +9,14 @@ export async function GET() {
 	if (!session)
 		return NextResponse.json({ message: 'Не авторизован' }, { status: 401 })
 
-	const userRole = await prisma.user.findUnique({
+	const user = await prisma.user.findUnique({
 		where: {
 			email: session.user.email!,
 		},
-		select: {
-			role: true,
-		},
 	})
 
-	return NextResponse.json(userRole, { status: 200 })
+	if (!user)
+		return NextResponse.json({ message: 'Не существует' }, { status: 404 })
+
+	return NextResponse.json(user, { status: 200 })
 }

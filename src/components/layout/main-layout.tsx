@@ -1,32 +1,52 @@
 'use client'
 
 import { useGetApplicationStatus } from '@/hooks/use-get-application-status'
-import { useGetUserRole } from '@/hooks/use-get-user-role'
-import { PropsWithChildren } from 'react'
+import { useGetUserData } from '@/hooks/use-get-user-data'
+import { IUser } from '@/types/user.types'
+import { PropsWithChildren, useEffect, useState } from 'react'
 import AfterApplication from '../application/after-application'
 import Application from '../application/application'
 import Download from '../ui/download'
 import Sidebar from './side-bar'
 
 const MainLayout = ({ children }: PropsWithChildren) => {
-	const { role, isUserPending } = useGetUserRole()
-
-	const { status, isStatusLoading } = useGetApplicationStatus(
-		role !== 'guest' || !role ? false : true
+	const { userData, isUserPending, isUserLoading, refetchUserRole } =
+		useGetUserData()
+	const { status } = useGetApplicationStatus(
+		userData?.role !== 'guest' || !userData?.role ? false : true
 	)
 
-	if (isUserPending || isStatusLoading) return <Download />
+	const [localUserData, setLocalUserData] = useState<IUser | null>(userData!)
 
-	if (role === 'member' || role === 'admin' || role === 'owner') {
-		return (
-			<>
-				<Sidebar />
-				<div className='wrapper'>{children}</div>
-			</>
-		)
+	useEffect(() => {
+		if (userData) {
+			setLocalUserData(userData)
+		}
+	}, [userData])
+
+	const handleUserRoleUpdate = async () => {
+		await refetchUserRole()
+	}
+
+	if (isUserPending || isUserLoading) {
+		return <Download />
 	} else {
-		if (status === 'none') return <Application />
-		if (status === 'pending') return <AfterApplication />
+		if (
+			localUserData?.role === 'member' ||
+			localUserData?.role === 'admin' ||
+			localUserData?.role === 'owner'
+		) {
+			return (
+				<>
+					<Sidebar />
+					<div className='wrapper'>{children}</div>
+				</>
+			)
+		} else {
+			if (status === 'none') return <Application />
+			if (status === 'pending')
+				return <AfterApplication onApprove={handleUserRoleUpdate} />
+		}
 	}
 }
 

@@ -53,6 +53,8 @@ model User {
 
   steamId String?
 
+  competitive CompetitiveEnum?
+
   @@map("users")
 }
 
@@ -77,12 +79,12 @@ model Application {
   hours   String
   reason  String
 
-  status ApplicationStatus @default(pending)
+  status ApplicationStatusEnum @default(pending)
 
   @@map("application")
 }
 
-enum ApplicationStatus {
+enum ApplicationStatusEnum {
   none
   pending
   denied
@@ -102,4 +104,9 @@ enum KitEnum {
   LAT
   RFL
   MD
+}
+
+enum CompetitiveEnum {
+  FRONT
+  RESERVE
 }

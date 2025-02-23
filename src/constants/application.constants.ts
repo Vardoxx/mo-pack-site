@@ -14,7 +14,9 @@ interface IKit {
 	disabled: boolean
 }
 
-const kitsCount: { data: IKitsCount } = await axiosClassic.get('/composition')
+const kitsCount: { data: IKitsCount } = await axiosClassic.get(
+	'/composition/kits-count'
+)
 
 export const kit: IKit[] = [
 	{

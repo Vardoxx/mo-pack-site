@@ -1,5 +1,5 @@
 import { axiosClassic } from '@/api/interceptors'
-import { ApplicationStatus } from '@prisma/client'
+import { ApplicationStatusEnum } from '@prisma/client'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
@@ -7,13 +7,15 @@ export function useGetApplicationStatus(enabled?: boolean) {
 	const { data, isLoading, refetch, isPending } = useQuery({
 		queryKey: ['getApplicationStatus'],
 		queryFn: async () =>
-			await axiosClassic.get<{ status: ApplicationStatus }>(
+			await axiosClassic.get<{ status: ApplicationStatusEnum }>(
 				'/application/get-status'
 			),
 		enabled,
 	})
 
-	const [status, setStatus] = useState<ApplicationStatus>(data?.data.status!)
+	const [status, setStatus] = useState<ApplicationStatusEnum>(
+		data?.data.status!
+	)
 
 	useEffect(() => {
 		if (data?.data.status) {

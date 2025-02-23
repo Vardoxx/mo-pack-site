@@ -1,19 +1,21 @@
 'use client'
 
 import { useGetApplicationStatus } from '@/hooks/use-get-application-status'
-import { useGetUserRole } from '@/hooks/use-get-user-role'
+import { useGetUserData } from '@/hooks/use-get-user-data'
 import { Button } from '@mui/material'
 import { useState } from 'react'
 import { FaRegClock } from 'react-icons/fa'
 import { toast } from 'sonner'
 import Block from '../ui/block'
 
-const AfterApplication = () => {
+interface AfterApplicationProps {
+	onApprove: () => void
+}
+
+const AfterApplication = ({ onApprove }: AfterApplicationProps) => {
 	const { refetchApplicationStatus, isStatusLoading } =
 		useGetApplicationStatus()
-
-	const { refetchUserRole } = useGetUserRole()
-
+	const { refetchUserRole } = useGetUserData()
 	const [isReload, setIsReload] = useState(false)
 
 	async function tryApplicationStatus() {
@@ -29,6 +31,7 @@ const AfterApplication = () => {
 			if (data.data.status === 'approved') {
 				toast.success('Заявка одобрена')
 				await refetchUserRole()
+				onApprove()
 			}
 
 			if (data.data.status === 'denied') {
