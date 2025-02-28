@@ -4,21 +4,34 @@ import { navBarItems } from '@/constants/side-bar.constants'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
 import { useState } from 'react'
+import { IoMdArrowDropright } from 'react-icons/io'
 import { TbMapRoute } from 'react-icons/tb'
 
 const Sidebar = () => {
 	const router = useRouter()
 	const pathName = usePathname()
 
+	const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
+		{}
+	)
 	const [isActive, setActive] = useState<boolean>(false)
 
 	function open() {
 		!isActive ? setActive(true) : setActive(!isActive)
 	}
 
-	function clickElement(to: string) {
-		router.push(to)
-		setActive(!isActive)
+	function clickElement(to?: string) {
+		if (to) {
+			router.push(to)
+			setActive(!isActive)
+		}
+	}
+
+	function toggleChildren(id: string) {
+		setExpandedItems(prev => ({
+			...prev,
+			[id]: !prev[id],
+		}))
 	}
 
 	return (
@@ -43,16 +56,45 @@ const Sidebar = () => {
 				} fixed top-0 bottom-0 w-64 bg-slate-600 p-4 transition-all duration-300 z-30`}
 			>
 				<ul className='space-y-4'>
-					{navBarItems.map(({ title, to, icon }) => (
-						<li
-							key={to}
-							onClick={() => clickElement(to)}
-							className={`group flex items-center gap-3 p-2 text-white cursor-pointer hover:bg-orange-500 rounded-lg transition-all ${
-								pathName === to ? 'bg-orange-500' : ''
-							}`}
-						>
-							<div className='text-2xl'>{icon}</div>
-							{title}
+					{navBarItems.map(({ title, to, icon, children, id }) => (
+						<li key={id}>
+							<div
+								onClick={() => {
+									if (children) {
+										toggleChildren(id)
+									} else {
+										clickElement(to)
+									}
+								}}
+								className={`group flex items-center gap-3 p-2 text-white cursor-pointer hover:bg-orange-500 rounded-lg transition-all ${
+									pathName === to ? 'bg-orange-500' : ''
+								}`}
+							>
+								<div className='text-2xl relative'>{icon}</div>
+								{title}
+								{children && (
+									<IoMdArrowDropright
+										className={`absolute text-2xl right-6 transition-all ${
+											expandedItems[id] ? 'rotate-90' : ''
+										}`}
+									/>
+								)}
+							</div>
+
+							{children && expandedItems[id] && (
+								<ul className='ml-4 space-y-2 mt-2 bg-slate-700 p-2 rounded-md'>
+									{children.map(({ icon, title, to, id }) => (
+										<li
+											key={id}
+											onClick={() => clickElement(to)}
+											className={`group flex items-center gap-3 p-2 text-white cursor-pointer hover:bg-orange-500 rounded-lg transition-all`}
+										>
+											<div className='text-2xl'>{icon}</div>
+											{title}
+										</li>
+									))}
+								</ul>
+							)}
 						</li>
 					))}
 				</ul>
