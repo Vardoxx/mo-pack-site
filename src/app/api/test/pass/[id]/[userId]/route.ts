@@ -1,3 +1,4 @@
+import { timeBlock } from '@/server-utils/time-block'
 import { GradeEnum } from '@prisma/client'
 import { NextResponse } from 'next/server'
 import prisma from '../../../../../../../prisma/prisma-client'
@@ -12,6 +13,31 @@ export async function POST(
 	{ params }: { params: { id: string; userId: string } }
 ) {
 	const { id, userId } = await params
+
+	const lastUserTest = await prisma.userTests.findFirst({
+		where: {
+			userId,
+		},
+		select: {
+			createdAt: true,
+		},
+		orderBy: {
+			createdAt: 'desc',
+		},
+	})
+
+	if (lastUserTest) {
+		const remainingTime = timeBlock(lastUserTest.createdAt, 10000)
+
+		if (remainingTime) {
+			return NextResponse.json(
+				{
+					message: `Вы не можете проходить тест ещё ${remainingTime.days} дней ${remainingTime.hours} часов ${remainingTime.minutes} минут ${remainingTime.seconds} секунд`,
+				},
+				{ status: 422 }
+			)
+		}
+	}
 
 	const data: TestPassRequire[] = await req.json()
 
@@ -129,14 +155,9 @@ export async function POST(
 
 function getGrade(incorrectAnswersQuantity: number) {
 	if (incorrectAnswersQuantity >= 24) return GradeEnum.F
-
 	if (incorrectAnswersQuantity >= 20) return GradeEnum.D
-
 	if (incorrectAnswersQuantity >= 10) return GradeEnum.C
-
 	if (incorrectAnswersQuantity >= 6) return GradeEnum.B
-
 	if (incorrectAnswersQuantity >= 1) return GradeEnum.A
-
 	return GradeEnum.S
 }
