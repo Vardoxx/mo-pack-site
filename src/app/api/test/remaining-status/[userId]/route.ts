@@ -22,12 +22,17 @@ export async function GET(
 	})
 
 	if (!lastUserTest)
-		return NextResponse.json({ remainingTime: null }, { status: 200 })
+		return NextResponse.json(
+			{
+				block: false,
+			},
+			{ status: 200 }
+		)
 
 	const remainingTime = timeBlock(lastUserTest.createdAt, day * 2)
 
 	return NextResponse.json(
-		{ remainingTime: remainingTime ? remainingTime : null },
+		{ block: !remainingTime ? false : true, remainingTime: remainingTime },
 		{ status: 200 }
 	)
 }

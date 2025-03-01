@@ -1,11 +1,13 @@
 'use client'
 
 import { navBarItems } from '@/constants/side-bar.constants'
+import { useCountdown } from '@/hooks/use-countdown'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
 import { useState } from 'react'
 import { IoMdArrowDropright } from 'react-icons/io'
 import { TbMapRoute } from 'react-icons/tb'
+import { toast } from 'sonner'
 
 const Sidebar = () => {
 	const router = useRouter()
@@ -33,6 +35,8 @@ const Sidebar = () => {
 			[id]: !prev[id],
 		}))
 	}
+
+	const { isBlock, isLoading, remainingTime } = useCountdown()
 
 	return (
 		<div className='relative z-50'>
@@ -86,11 +90,26 @@ const Sidebar = () => {
 									{children.map(({ icon, title, to, id }) => (
 										<li
 											key={id}
-											onClick={() => clickElement(to)}
+											onClick={
+												title === 'Пройти'
+													? isBlock
+														? () =>
+																toast.error(
+																	`Вы не можете пройти тест ещё ${remainingTime}`
+																)
+														: () => clickElement(to)
+													: () => clickElement(to)
+											}
 											className={`group flex items-center gap-3 p-2 text-white cursor-pointer hover:bg-orange-500 rounded-lg transition-all`}
 										>
 											<div className='text-2xl'>{icon}</div>
-											{title}
+											{title === 'Пройти'
+												? isLoading
+													? 'Загрузка'
+													: isBlock
+													? remainingTime
+													: title
+												: title}
 										</li>
 									))}
 								</ul>
