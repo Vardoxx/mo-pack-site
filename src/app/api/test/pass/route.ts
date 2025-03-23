@@ -1,22 +1,26 @@
+import { getServerSessionUserData } from '@/server-utils/get-server-session-data'
 import { timeBlock } from '@/server-utils/time-block'
 import { GradeEnum } from '@prisma/client'
 import { NextResponse } from 'next/server'
-import prisma from '../../../../../../../prisma/prisma-client'
+import prisma from '../../../../../prisma/prisma-client'
 
 export interface TestPassRequire {
 	questionArrangement: number
 	answerArrangement: number
 }
 
-export async function POST(
-	req: Request,
-	{ params }: { params: { id: string; userId: string } }
-) {
-	const { id, userId } = await params
+export async function POST(req: Request) {
+	const user = await getServerSessionUserData()
+
+	if (user.unauthorized)
+		return NextResponse.json({ message: 'Не авторизован' }, { status: 401 })
+
+	if (user.role === 'guest')
+		return NextResponse.json({ message: 'Доступ ограничен' }, { status: 403 })
 
 	const lastUserTest = await prisma.userTests.findFirst({
 		where: {
-			userId,
+			userId: user.id,
 		},
 		select: {
 			createdAt: true,
@@ -57,7 +61,7 @@ export async function POST(
 
 	const test = await prisma.test.findUnique({
 		where: {
-			id,
+			kit: user.kit,
 		},
 		select: {
 			questions: {
@@ -114,7 +118,7 @@ export async function POST(
 	if (grade === GradeEnum.S)
 		await prisma.user.update({
 			where: {
-				id: userId,
+				id: user.id,
 			},
 			data: {
 				competitive: 'FRONT',
@@ -123,7 +127,7 @@ export async function POST(
 
 	const userTest = await prisma.userTests.create({
 		data: {
-			userId,
+			userId: user.id,
 			grade,
 			wrongAnswers: {
 				create:

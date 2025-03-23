@@ -1,17 +1,18 @@
-import { day } from '@/constants/time.constants'
+import { second } from '@/constants/time.constants'
+import { getServerSessionUserData } from '@/server-utils/get-server-session-data'
 import { timeBlock } from '@/server-utils/time-block'
 import { NextResponse } from 'next/server'
-import prisma from '../../../../../../prisma/prisma-client'
+import prisma from '../../../../../prisma/prisma-client'
 
-export async function GET(
-	req: Request,
-	{ params }: { params: { userId: string } }
-) {
-	const { userId } = await params
+export async function GET() {
+	const user = await getServerSessionUserData()
+
+	if (user.unauthorized)
+		return NextResponse.json({ message: 'Не авторизован' }, { status: 401 })
 
 	const lastUserTest = await prisma.userTests.findFirst({
 		where: {
-			userId,
+			userId: user.id,
 		},
 		select: {
 			createdAt: true,
@@ -29,7 +30,7 @@ export async function GET(
 			{ status: 200 }
 		)
 
-	const remainingTime = timeBlock(lastUserTest.createdAt, day * 2)
+	const remainingTime = timeBlock(lastUserTest.createdAt, second * 20)
 
 	return NextResponse.json(
 		{ block: !remainingTime ? false : true, remainingTime: remainingTime },

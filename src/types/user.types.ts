@@ -1,9 +1,14 @@
-import { KitEnum, UserEnum } from '@prisma/client'
+import { CompetitiveEnum, KitEnum, UserEnum } from '@prisma/client'
 
 export interface IUser {
-	kit: KitEnum
+	id: string
 	name: string
-	email: string
 	role: UserEnum
-	steamID: number
+	kit: KitEnum
+	steamId: string
+	competitive: CompetitiveEnum
+}
+
+export interface IUserDataWithStatus extends IUser {
+	unauthorized: boolean
 }

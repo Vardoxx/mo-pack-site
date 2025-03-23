@@ -18,9 +18,7 @@ export function useCountdown() {
 	const { data, isLoading } = useQuery({
 		queryKey: ['countdown'],
 		queryFn: () =>
-			axiosClassic.get<IRemainingTimeResponse>(
-				'/test/remaining-status/cm7hmdwrh001v0w9o993sgix5'
-			),
+			axiosClassic.get<IRemainingTimeResponse>('/test/remaining-status'),
 	})
 
 	const [remainingTime, setRemainingTime] = useState<string>('00:00:00:00')

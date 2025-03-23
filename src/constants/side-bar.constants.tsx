@@ -37,13 +37,13 @@ export const navBarItems: INavBarItems[] = [
 			{
 				icon: <FaPenAlt />,
 				title: 'Пройти',
-				to: URL.TEST,
+				to: URL.TEST_PASS,
 				id: idGenerator(),
 			},
 			{
 				icon: <FaBook />,
 				title: 'История',
-				to: URL.TEST,
+				to: URL.TEST_HISTORY,
 				id: idGenerator(),
 			},
 		],

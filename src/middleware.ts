@@ -7,15 +7,15 @@ export async function middleware(request: NextRequest) {
 
 	const token = await getToken({ req: request })
 
-	const isAuthPage = url.includes(URL_PAGE.AUTH)
+	const isAuthPage = url.includes(URL_PAGE.auth_root)
 	const isWelcomePage = url.includes(URL_PAGE.WELCOME)
 
 	if (isWelcomePage && token) {
-		return NextResponse.redirect(new URL(URL_PAGE.MAIN, request.url))
+		return NextResponse.redirect(new URL(URL_PAGE.main_root, request.url))
 	}
 
 	if (isAuthPage && token) {
-		return NextResponse.redirect(new URL(URL_PAGE.MAIN, request.url))
+		return NextResponse.redirect(new URL(URL_PAGE.main_root, request.url))
 	}
 
 	if ((isAuthPage || isWelcomePage) && !token) {

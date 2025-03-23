@@ -1,19 +1,11 @@
-import { nextAuthCfg } from '@/cfg/next-auth.cfg'
-import { getServerSession } from 'next-auth'
+import { getServerSessionUserData } from '@/server-utils/get-server-session-data'
 import { NextResponse } from 'next/server'
-import prisma from '../../../../../prisma/prisma-client'
 
 export async function GET() {
-	const session = await getServerSession(nextAuthCfg)
+	const user = await getServerSessionUserData()
 
-	if (!session)
+	if (user.unauthorized)
 		return NextResponse.json({ message: 'Не авторизован' }, { status: 401 })
-
-	const user = await prisma.user.findUnique({
-		where: {
-			email: session.user.email!,
-		},
-	})
 
 	if (!user)
 		return NextResponse.json({ message: 'Не существует' }, { status: 404 })

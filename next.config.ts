@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
 				permanent: true,
 			},
 			{
-				source: URL.MAIN,
+				source: URL.main_root,
 				destination: URL.COMPOSITION,
 				permanent: true,
 			},

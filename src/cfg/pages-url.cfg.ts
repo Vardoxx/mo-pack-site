@@ -1,14 +1,18 @@
 class PAGES_URL {
 	root = '/'
-	MAIN = '/main'
-	AUTH = '/auth'
+	main_root = '/main'
+	auth_root = '/auth'
+	test_root = `${this.main_root}/test`
+
 	WELCOME = '/welcome'
 
-	SIGN_IN = `${this.AUTH}/sign-in`
+	SIGN_IN = `${this.auth_root}/sign-in`
 
-	COMPOSITION = `${this.MAIN}/composition`
-	TEST = `${this.MAIN}/test`
-	PROFILE = `${this.MAIN}/profile`
+	COMPOSITION = `${this.main_root}/composition`
+	PROFILE = `${this.main_root}/profile`
+
+	TEST_PASS = `${this.test_root}/pass`
+	TEST_HISTORY = `${this.test_root}/history`
 }
 
 export const URL = new PAGES_URL()
