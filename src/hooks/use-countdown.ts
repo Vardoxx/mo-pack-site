@@ -15,7 +15,7 @@ interface IRemainingTimeResponse {
 }
 
 export function useCountdown() {
-	const { data, isLoading } = useQuery({
+	const { data, isLoading, refetch } = useQuery({
 		queryKey: ['countdown'],
 		queryFn: () =>
 			axiosClassic.get<IRemainingTimeResponse>('/test/remaining-status'),
@@ -64,5 +64,5 @@ export function useCountdown() {
 		return () => clearInterval(interval)
 	}, [data, isLoading])
 
-	return { remainingTime, isBlock, isLoading }
+	return { remainingTime, isBlock, isLoading, refetch }
 }

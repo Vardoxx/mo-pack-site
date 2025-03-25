@@ -1,7 +1,14 @@
 'use client'
 
 import { axiosClassic } from '@/api/interceptors'
-import { PassTestData, PassTestRequire } from '@/types/test.types'
+import { URL } from '@/cfg/pages-url.cfg'
+import Download from '@/components/ui/download'
+import { useCountdown } from '@/hooks/use-countdown'
+import {
+	PassTestData,
+	PassTestRequire,
+	PassTestResponse,
+} from '@/types/test.types'
 import {
 	Button,
 	FormControl,
@@ -10,20 +17,31 @@ import {
 	RadioGroup,
 } from '@mui/material'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useRouter } from 'nextjs-toploader/app'
+import { useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
 
 const Pass = () => {
-	const { data } = useQuery({
+	const router = useRouter()
+
+	const { isBlock, isLoading: countdownLoading, refetch } = useCountdown()
+
+	useEffect(() => {
+		if (isBlock) {
+			router.push(URL.COMPOSITION)
+		}
+	}, [isBlock, router])
+
+	const { data, isLoading: testLoading } = useQuery({
 		queryKey: ['getTest'],
 		queryFn: () => axiosClassic.get<PassTestData>('test/get-test'),
 	})
 
 	const test = data?.data
+	const questionRefs = useRef<(HTMLDivElement | null)[]>([])
 
-	// State to keep track of the selected answers
 	const [answers, setAnswers] = useState<Record<number, number>>({})
 
-	// Handle answer change
 	const handleAnswerChange = (
 		questionArrangement: number,
 		answerArrangement: number
@@ -34,31 +52,59 @@ const Pass = () => {
 		}))
 	}
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		const formattedAnswers = Object.keys(answers).map(key => ({
 			questionArrangement: parseInt(key),
 			answerArrangement: answers[parseInt(key)],
 		}))
+
+		const unansweredQuestions = test?.questions.filter(
+			question => !answers[question.arrangement]
+		)
+
+		if (unansweredQuestions?.length) {
+			toast.error('Вы ответили не на все вопросы')
+
+			const firstUnansweredQuestion = unansweredQuestions[0]
+
+			const questionIndex = test?.questions.findIndex(
+				question => question.arrangement === firstUnansweredQuestion.arrangement
+			)
+
+			if (questionIndex !== undefined && questionRefs.current[questionIndex]) {
+				questionRefs.current[questionIndex]?.scrollIntoView({
+					behavior: 'smooth',
+					block: 'center',
+				})
+				return
+			}
+		}
+
 		mutate(formattedAnswers)
+
+		await router.push(URL.TEST_HISTORY)
 	}
 
-	const { mutate } = useMutation({
+	const { data: results, mutate } = useMutation({
 		mutationKey: ['postTest'],
 		mutationFn: (data: PassTestRequire[]) => {
-			return axiosClassic.post('/test/pass', data)
+			return axiosClassic.post<PassTestResponse>('/test/pass', data)
 		},
 	})
+
+	if (countdownLoading || testLoading || isBlock) return <Download />
 
 	return (
 		<div className='flex flex-col gap-7'>
 			<h1 className='flex w-full items-center justify-center mt-7 text-4xl'>
 				Тест для {test?.kit}
 			</h1>
-			<FormControl>
-				{test?.questions?.map(question => (
+			<FormControl className='flex flex-col gap-8'>
+				{test?.questions?.map((question, index) => (
 					<div
 						key={question.arrangement}
 						className='flex flex-col gap-2 bg-slate-800 rounded-2xl p-4 border-2 border-orange-500'
+						ref={el => (questionRefs.current[index] = el) as any}
 					>
 						<div className='text-2xl'>
 							{question.arrangement}. {question.text}
@@ -91,10 +137,10 @@ const Pass = () => {
 			<Button
 				onClick={handleSubmit}
 				variant='contained'
-				color='primary'
+				color='warning'
 				className='mt-7'
 			>
-				Submit Answers
+				Отправить ответы
 			</Button>
 		</div>
 	)

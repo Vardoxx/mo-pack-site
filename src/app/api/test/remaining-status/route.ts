@@ -30,7 +30,7 @@ export async function GET() {
 			{ status: 200 }
 		)
 
-	const remainingTime = timeBlock(lastUserTest.createdAt, second * 20)
+	const remainingTime = timeBlock(lastUserTest.createdAt, second * 60)
 
 	return NextResponse.json(
 		{ block: !remainingTime ? false : true, remainingTime: remainingTime },
